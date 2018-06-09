@@ -1,0 +1,7 @@
+{
+	"extends": "fullstack",
+	"rules": {
+		"semi": [2, "always"],
+		"new-cap": [1, { "capIsNewExceptions": ["Router"] }]
+	}
+}
