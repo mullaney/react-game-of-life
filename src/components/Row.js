@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 
-const RowContainer = styled.div`
+const Row = styled.div`
   display: flex;
+  flex-direction: row;
   justify-content: center;
 `;
 
-export default RowContainer;
+export default Row;

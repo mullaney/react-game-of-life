@@ -1,0 +1,134 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Button should have the proper styles 1`] = `
+.c0 {
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 0.3rem;
+  font-weight: bold;
+  margin: 0.5rem 0.2rem;
+  padding: 0.3rem 0.6rem;
+}
+
+<button
+  className="c0"
+/>
+`;
+
+exports[`Cell should have the proper styles when alive 1`] = `
+.c0 {
+  background: black;
+  color: white;
+}
+
+<div
+  className="c0"
+/>
+`;
+
+exports[`Cell should have the proper styles when dead 1`] = `
+.c0 {
+  background: white;
+  color: black;
+}
+
+<div
+  className="c0"
+/>
+`;
+
+exports[`Column should have the proper styles 1`] = `
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  padding: 1rem;
+}
+
+<div
+  className="c0"
+/>
+`;
+
+exports[`Grid should have the proper styles 1`] = `
+.c0 {
+  display: grid;
+  grid-gap: 1px;
+  grid-template-rows: repeat(25,8px);
+  grid-template-columns: repeat(25,8px);
+  margin: 0 auto;
+}
+
+<div
+  className="c0"
+/>
+`;
+
+exports[`Grid should have the right number of rows, columns and size 1`] = `
+.c0 {
+  display: grid;
+  grid-gap: 1px;
+  grid-template-rows: repeat(10,20px);
+  grid-template-columns: repeat(99,20px);
+  margin: 0 auto;
+}
+
+<div
+  className="c0"
+  cols={99}
+  rows={10}
+  size="20px"
+/>
+`;
+
+exports[`Header1 should have the proper styles 1`] = `
+.c0 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+<h1
+  className="c0"
+/>
+`;
+
+exports[`Row should have the proper styles 1`] = `
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+<div
+  className="c0"
+/>
+`;
+
+exports[`Text should have the proper styles 1`] = `
+.c0 {
+  margin: 0 0 .7rem 0;
+  font-size: 0.9rem;
+}
+
+<p
+  className="c0"
+/>
+`;
