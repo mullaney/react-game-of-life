@@ -2,9 +2,11 @@ import reduce, {
   clearGrid,
   randomizeGrid,
   oneTick,
+  togglePlay,
   CLEAR_GRID,
   RANDOMIZE_GRID,
-  ONE_TICK
+  ONE_TICK,
+  TOGGLE_PLAY
 } from './game';
 
 describe('Game store', () => {
@@ -22,6 +24,11 @@ describe('Game store', () => {
     describe('oneTick', () => {
       test('should create the correct action', () => {
         expect(oneTick()).toEqual({ type: ONE_TICK });
+      });
+    });
+    describe('togglePlay', () => {
+      test('should create the correct action', () => {
+        expect(togglePlay()).toEqual({ type: TOGGLE_PLAY });
       });
     });
   });
@@ -84,6 +91,29 @@ describe('Game store', () => {
         expect(reduce(state2, oneTick())).toEqual(state1);
         expect(reduce(state1, oneTick())).toEqual(state2);
         expect(reduce(state2, oneTick())).toEqual(state1);
+      });
+    });
+
+    describe('TOGGLE_PLAY should turn toggle running prop', () => {
+      test('should toggle running to true', () => {
+        const state = {
+          running: false,
+          other: 'property'
+        };
+        expect(reduce(state, togglePlay())).toEqual({
+          running: true,
+          other: 'property'
+        });
+      });
+      test('should toggle running to false', () => {
+        const state = {
+          running: true,
+          other: 'property'
+        };
+        expect(reduce(state, togglePlay())).toEqual({
+          running: false,
+          other: 'property'
+        });
       });
     });
   });
