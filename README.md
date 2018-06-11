@@ -3,7 +3,7 @@
 Conway's Game of Life implement using:
 * React
 * Redux
+* Styled Components
 * CSS Grid
-* ?Styled Components
 
-[game-of-life](https://mullaney.github.io/react-game-of-life/)
+See demo at [game-of-life](https://mullaney.github.io/react-game-of-life/).
