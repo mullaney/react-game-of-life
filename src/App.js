@@ -8,12 +8,18 @@ import Header1 from './components/Header1';
 import Text from './components/Text';
 import Button from './components/Button';
 import { connect } from 'react-redux';
-import { clearGrid, randomizeGrid } from './store';
+import { clearGrid, randomizeGrid, oneTick } from './store';
 
-export const App = ({rows, cols, cells, size, handleClear, handleRandom}) => {
-  console.log('rows: ', rows);
-  console.log('cells: ', cells);
+export const App = props => {
+  const {
+    rows, cols, cells, size,
+    handleClear,
+    handleRandom,
+    handleTick
+  } = props;
+
   let counter = 0;
+
   return (
     <Row>
       <Column>
@@ -25,7 +31,7 @@ export const App = ({rows, cols, cells, size, handleClear, handleRandom}) => {
           })}
         </Grid>
         <Row>
-          <Button>></Button>
+          <Button onClick={handleTick} >></Button>
           <Button>Play</Button>
           <Button onClick={handleClear} >Clear</Button>
           <Button onClick={handleRandom}>Random</Button>
@@ -51,6 +57,9 @@ const mapDispatch = (dispatch) => {
     },
     handleRandom() {
       dispatch(randomizeGrid());
+    },
+    handleTick() {
+      dispatch(oneTick());
     }
   };
 };

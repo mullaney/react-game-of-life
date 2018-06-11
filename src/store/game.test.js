@@ -1,8 +1,10 @@
 import reduce, {
   clearGrid,
   randomizeGrid,
+  oneTick,
   CLEAR_GRID,
-  RANDOMIZE_GRID
+  RANDOMIZE_GRID,
+  ONE_TICK
 } from './game';
 
 describe('Game store', () => {
@@ -15,6 +17,11 @@ describe('Game store', () => {
     describe('randomizeGrid', () => {
       test('should create the correct action', () => {
         expect(randomizeGrid()).toEqual({ type: RANDOMIZE_GRID });
+      });
+    });
+    describe('oneTick', () => {
+      test('should create the correct action', () => {
+        expect(oneTick()).toEqual({ type: ONE_TICK });
       });
     });
   });
@@ -42,6 +49,41 @@ describe('Game store', () => {
           cols: 10,
         };
         expect(reduce(state, randomizeGrid()).cells.length).toBe(100);
+      });
+    });
+
+    describe('ONE_TICK should transform the grid by one tick', () => {
+      test('should clear the grid', () => {
+        const blinker1 = [
+          0, 0, 0, 0, 0,
+          0, 0, 1, 0, 0,
+          0, 0, 1, 0, 0,
+          0, 0, 1, 0, 0,
+          0, 0, 0, 0, 0,
+        ];
+        const blinker2 = [
+          0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0,
+          0, 1, 1, 1, 0,
+          0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0,
+        ];
+        const state1 = {
+          cells: blinker1,
+          other: 'property',
+          rows: 5,
+          cols: 5,
+        };
+        const state2 = {
+          cells: blinker2,
+          other: 'property',
+          rows: 5,
+          cols: 5,
+        };
+        expect(reduce(state1, oneTick())).toEqual(state2);
+        expect(reduce(state2, oneTick())).toEqual(state1);
+        expect(reduce(state1, oneTick())).toEqual(state2);
+        expect(reduce(state2, oneTick())).toEqual(state1);
       });
     });
   });
