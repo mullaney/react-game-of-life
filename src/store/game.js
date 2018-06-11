@@ -1,6 +1,6 @@
 import {randomGrid, tick} from './helpers';
 
-const DEFAULT_SIZE = 40;
+const DEFAULT_SIZE = 60;
 
 export const CLEAR_GRID = 'CLEAR_GRID';
 export const RANDOMIZE_GRID = 'RANDOMIZE_GRID';
@@ -12,7 +12,7 @@ export const initialState = {
   rows: DEFAULT_SIZE,
   cols: DEFAULT_SIZE,
   running: false,
-  size: '15px'
+  size: '10px'
 };
 
 // Action Creators
