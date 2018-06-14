@@ -3,10 +3,12 @@ import reduce, {
   randomizeGrid,
   oneTick,
   togglePlay,
+  changeGridSize,
   CLEAR_GRID,
   RANDOMIZE_GRID,
   ONE_TICK,
-  TOGGLE_PLAY
+  TOGGLE_PLAY,
+  CHANGE_GRID_SIZE
 } from './game';
 
 describe('Game store', () => {
@@ -29,6 +31,11 @@ describe('Game store', () => {
     describe('togglePlay', () => {
       test('should create the correct action', () => {
         expect(togglePlay()).toEqual({ type: TOGGLE_PLAY });
+      });
+    });
+    describe('changeGridSize', () => {
+      test('should change the grid size', () => {
+        expect(changeGridSize(80)).toEqual({ type: CHANGE_GRID_SIZE, size: 80 });
       });
     });
   });
@@ -94,7 +101,7 @@ describe('Game store', () => {
       });
     });
 
-    describe('TOGGLE_PLAY should turn toggle running prop', () => {
+    describe('TOGGLE_PLAY', () => {
       test('should toggle running to true', () => {
         const state = {
           running: false,
@@ -114,6 +121,67 @@ describe('Game store', () => {
           running: false,
           other: 'property'
         });
+      });
+    });
+
+    describe('CHANGE_GRID_SIZE', () => {
+      test('should set the correct row, height and size, when changing size of grid', () => {
+        const state = {
+          rows: 5,
+          cols: 5,
+          size: '77px',
+          cells: []
+        };
+
+        let newState = reduce(state, changeGridSize(20));
+        expect(newState.rows).toBe(20);
+        expect(newState.cols).toBe(20);
+        expect(newState.size).toBe('25px');
+        expect(newState.cells.length).toBe(400);
+
+        newState = reduce(state, changeGridSize(30));
+        expect(newState.rows).toBe(30);
+        expect(newState.size).toBe('16px');
+
+        newState = reduce(state, changeGridSize(40));
+        expect(newState.rows).toBe(40);
+        expect(newState.size).toBe('12px');
+
+        newState = reduce(state, changeGridSize(50));
+        expect(newState.rows).toBe(50);
+        expect(newState.size).toBe('9px');
+
+        newState = reduce(state, changeGridSize(60));
+        expect(newState.rows).toBe(60);
+        expect(newState.size).toBe('8px');
+
+        newState = reduce(state, changeGridSize(70));
+        expect(newState.rows).toBe(70);
+        expect(newState.size).toBe('6px');
+
+        newState = reduce(state, changeGridSize(80));
+        expect(newState.rows).toBe(80);
+        expect(newState.size).toBe('5px');
+
+        newState = reduce(state, changeGridSize(90));
+        expect(newState.rows).toBe(90);
+        expect(newState.size).toBe('5px');
+
+        newState = reduce(state, changeGridSize(100));
+        expect(newState.rows).toBe(100);
+        expect(newState.size).toBe('4px');
+      });
+      test('should set running to false', () => {
+        const state = {
+          rows: 5,
+          cols: 5,
+          size: '77px',
+          cells: [],
+          running: true,
+        };
+
+        let newState = reduce(state, changeGridSize(20));
+        expect(newState.running).toBe(false);
       });
     });
   });

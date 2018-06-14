@@ -1,4 +1,4 @@
-import {randomGrid, livingNeighbors, tick} from './helpers';
+import {randomGrid, livingNeighbors, tick, gridWidth, optimalGridSize} from './helpers';
 
 describe('randomGrid', () => {
   it('should return a grid of the correct size', () => {
@@ -77,5 +77,25 @@ describe('tick', () => {
 
     expect(tick(glider1, shape)).toEqual(glider2);
 
+  });
+});
+
+describe('gridWidth', () => {
+  it('should return the expected width', () => {
+    expect(gridWidth(20)).toBe(521);
+  });
+});
+
+describe('optimalGridSize', () => {
+  it('should return the expected size', () => {
+    expect(optimalGridSize(20)).toBe(25);
+    expect(optimalGridSize(30)).toBe(16);
+    expect(optimalGridSize(40)).toBe(12);
+    expect(optimalGridSize(50)).toBe(9);
+    expect(optimalGridSize(60)).toBe(8);
+    expect(optimalGridSize(70)).toBe(6);
+    expect(optimalGridSize(80)).toBe(5);
+    expect(optimalGridSize(90)).toBe(5);
+    expect(optimalGridSize(100)).toBe(4);
   });
 });

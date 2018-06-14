@@ -43,3 +43,12 @@ export const tick = (cells, shape) => {
 
   return newCells;
 };
+
+export const gridWidth = size => size * (Math.floor(500 / size) + 1) + 1;
+
+export const optimalGridSize = size => {
+  const cellSize = Math.floor(500 / size);
+  const width = gridWidth(size);
+  return cellSize - Math.floor(width / 542);
+};
+

@@ -67,6 +67,9 @@ exports[`Grid should have the proper styles 1`] = `
   grid-template-rows: repeat(25,8px);
   grid-template-columns: repeat(25,8px);
   margin: 0 auto;
+  background-color: #eee;
+  border: 1px solid #bbb;
+  margin: 1rem 0;
 }
 
 <div
@@ -81,6 +84,9 @@ exports[`Grid should have the right number of rows, columns and size 1`] = `
   grid-template-rows: repeat(10,20px);
   grid-template-columns: repeat(99,20px);
   margin: 0 auto;
+  background-color: #eee;
+  border: 1px solid #bbb;
+  margin: 1rem 0;
 }
 
 <div
@@ -93,7 +99,7 @@ exports[`Grid should have the right number of rows, columns and size 1`] = `
 
 exports[`Header1 should have the proper styles 1`] = `
 .c0 {
-  margin: 0;
+  margin: 0 0 1rem 0;
   font-size: 2rem;
   font-weight: bold;
 }
@@ -112,10 +118,10 @@ exports[`Row should have the proper styles 1`] = `
   -webkit-flex-direction: row;
   -ms-flex-direction: row;
   flex-direction: row;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
+  -webkit-box-pack: left;
+  -webkit-justify-content: left;
+  -ms-flex-pack: left;
+  justify-content: left;
 }
 
 <div
