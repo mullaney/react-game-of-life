@@ -86,7 +86,7 @@ describe('Row', () => {
     expect(tree.type).toBe('div');
     expect(tree).toHaveStyleRule('display', 'flex');
     expect(tree).toHaveStyleRule('flex-direction', 'row');
-    expect(tree).toHaveStyleRule('justify-content', 'center');
+    expect(tree).toHaveStyleRule('justify-content', 'left');
   });
 });
 

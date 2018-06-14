@@ -7,8 +7,9 @@ import Column from './components/Column';
 import Header1 from './components/Header1';
 import Text from './components/Text';
 import Button from './components/Button';
+import InputRange from './components/InputRange';
 import { connect } from 'react-redux';
-import { clearGrid, randomizeGrid, oneTick, togglePlay } from './store';
+import { clearGrid, randomizeGrid, oneTick, togglePlay, changeGridSize } from './store';
 
 export class App extends Component {
   constructor() {
@@ -17,16 +18,12 @@ export class App extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log('this.props.running: ', this.props.running);
     if (prevProps.running !== this.props.running) {
       if (this.props.running) {
         this.tickId = setInterval(this.props.handleTick, 5);
-        console.log('this.props.handleTick: ', this.props.handleTick);
-        console.log('this.tickId: ', this.tickId);
       } else {
         window.clearInterval(this.tickId);
         this.tickId = null;
-        console.log('this.tickId: ', this.tickId);
       }
     }
   }
@@ -38,6 +35,7 @@ export class App extends Component {
       handleRandom,
       handleTick,
       handlePlayStop,
+      handleChange,
     } = this.props;
 
     let counter = 0;
@@ -48,17 +46,19 @@ export class App extends Component {
         <Column>
           <Header1>Game of Life</Header1>
           <Text>Using react, redux, styled components & css grid! See code at <a href="https://github.com/mullaney/react-game-of-life">github</a>.</Text>
-          <Grid cols={cols} rows={rows} size={size}>
-            {cells && cells.map(cell => {
-              return <Cell alive={!!cell} key={counter++} />;
-            })}
-          </Grid>
+          <Text>Current grid size: {rows} by {cols}</Text>
           <Row>
             <Button onClick={handleTick} >></Button>
             <Button onClick={handlePlayStop}>{running ? 'Stop' : 'Play'}</Button>
             <Button onClick={handleClear} >Clear</Button>
             <Button onClick={handleRandom}>Random</Button>
+            <InputRange onChange={handleChange} min="20" max="100" step="10" value={rows} />
           </Row>
+          <Grid cols={cols} rows={rows} size={size}>
+            {cells && cells.map(cell => {
+              return <Cell alive={!!cell} key={counter++} />;
+            })}
+          </Grid>
         </Column>
       </Row>
     );
@@ -66,7 +66,6 @@ export class App extends Component {
 }
 
 const mapState = (state) => {
-  console.log('state: ', state);
   return {
     rows: state.game.rows,
     cols: state.game.cols,
@@ -89,6 +88,9 @@ const mapDispatch = (dispatch) => {
     },
     handlePlayStop() {
       dispatch(togglePlay());
+    },
+    handleChange(event) {
+      dispatch(changeGridSize(+event.target.value));
     }
   };
 };
