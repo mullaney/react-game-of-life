@@ -47,7 +47,7 @@ export default function (state = initialState, action) {
       return {...state, cells: tick(cells, [rows, cols])};
 
     case CLEAR_GRID:
-      return {...state, cells: [...cells].fill(0)};
+      return {...state, cells: cells.fill(0), running: false };
 
     case RANDOMIZE_GRID:
       return {...state, cells: randomGrid(rows * cols)};
