@@ -45,11 +45,13 @@ describe('Game store', () => {
       test('should clear the grid', () => {
         const state = {
           cells: [0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1],
-          other: 'property'
+          other: 'property',
+          running: true
         };
         expect(reduce(state, clearGrid())).toEqual({
           cells: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-          other: 'property'
+          other: 'property',
+          running: false
         });
       });
     });
