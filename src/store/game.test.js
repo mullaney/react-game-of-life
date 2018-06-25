@@ -4,11 +4,13 @@ import reduce, {
   oneTick,
   togglePlay,
   changeGridSize,
+  startBenchmarkTest,
   CLEAR_GRID,
   RANDOMIZE_GRID,
   ONE_TICK,
   TOGGLE_PLAY,
-  CHANGE_GRID_SIZE
+  CHANGE_GRID_SIZE,
+  START_BENCHMARK_TEST
 } from './game';
 
 describe('Game store', () => {
@@ -36,6 +38,11 @@ describe('Game store', () => {
     describe('changeGridSize', () => {
       test('should change the grid size', () => {
         expect(changeGridSize(80)).toEqual({ type: CHANGE_GRID_SIZE, size: 80 });
+      });
+    });
+    describe('startBenchmarkTest', () => {
+      test('should create the correct action', () => {
+        expect(startBenchmarkTest()).toEqual({ type: START_BENCHMARK_TEST });
       });
     });
   });
@@ -69,21 +76,21 @@ describe('Game store', () => {
     });
 
     describe('ONE_TICK should transform the grid by one tick', () => {
-      test('should clear the grid', () => {
-        const blinker1 = [
-          0, 0, 0, 0, 0,
-          0, 0, 1, 0, 0,
-          0, 0, 1, 0, 0,
-          0, 0, 1, 0, 0,
-          0, 0, 0, 0, 0,
-        ];
-        const blinker2 = [
-          0, 0, 0, 0, 0,
-          0, 0, 0, 0, 0,
-          0, 1, 1, 1, 0,
-          0, 0, 0, 0, 0,
-          0, 0, 0, 0, 0,
-        ];
+      const blinker1 = [
+        0, 0, 0, 0, 0,
+        0, 0, 1, 0, 0,
+        0, 0, 1, 0, 0,
+        0, 0, 1, 0, 0,
+        0, 0, 0, 0, 0,
+      ];
+      const blinker2 = [
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 1, 1, 1, 0,
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+      ];
+      test('should transform the grid by one tic', () => {
         const state1 = {
           cells: blinker1,
           other: 'property',
@@ -96,10 +103,35 @@ describe('Game store', () => {
           rows: 5,
           cols: 5,
         };
-        expect(reduce(state1, oneTick())).toEqual(state2);
-        expect(reduce(state2, oneTick())).toEqual(state1);
-        expect(reduce(state1, oneTick())).toEqual(state2);
-        expect(reduce(state2, oneTick())).toEqual(state1);
+        const newState1 = reduce(state1, oneTick());
+        expect(newState1.cells).toEqual(state2.cells);
+        const newState2 = reduce(newState1, oneTick());
+        expect(newState2.cells).toEqual(state1.cells);
+      });
+      test('if benchmark running, should increase the benchmark counter', () => {
+        const state = {
+          rows: 5,
+          cols: 5,
+          cells: blinker1,
+          benchmarkCounter: 1,
+          other: 'property'
+        };
+        const newState = reduce(state, oneTick());
+        expect(newState.benchmarkCounter).toBe(2);
+        expect(newState.other).toBe('property');
+      });
+      test('if benchmark counter exceeds 1000, stop running', () => {
+        const state = {
+          rows: 5,
+          cols: 5,
+          cells: blinker1,
+          benchmarkCounter: 1000,
+          running: true,
+          other: 'property'
+        };
+        const newState = reduce(state, oneTick());
+        expect(newState.running).toBe(false);
+        expect(newState.benchmarkCounter).toBe(0);
       });
     });
 
@@ -184,6 +216,32 @@ describe('Game store', () => {
 
         let newState = reduce(state, changeGridSize(20));
         expect(newState.running).toBe(false);
+      });
+    });
+
+    describe('START_BENCHMARK_TEST', () => {
+      test('should set set benchmark counter to 1', () => {
+        const state = {
+          other: 'property',
+          benchmarkCounter: 0
+        };
+
+        let newState = reduce(state, startBenchmarkTest());
+        expect(newState.other).toBe('property');
+        expect(newState.benchmarkCounter).toBe(1);
+      });
+
+      test('should set set benchmark start time to a timestamp', () => {
+        const state = {
+          other: 'property',
+          benchmarkStartTime: 0
+        };
+        const now = new Date().getTime();
+
+        let newState = reduce(state, startBenchmarkTest());
+        expect(newState.other).toBe('property');
+        expect(newState.benchmarkStartTime).toBeGreaterThanOrEqual(now);
+        expect(newState.benchmarkStartTime).toBeLessThan(now + 5);
       });
     });
   });

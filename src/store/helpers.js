@@ -1,5 +1,6 @@
 const ALIVE = 1;
 const DEAD = 0;
+export const BENCHMARK_COUNTER_MAX = 1000;
 
 export const randomGrid = size => {
   const grid = new Array(size).fill(0).map(() => Math.floor(Math.random() * 1.6));
@@ -50,5 +51,11 @@ export const optimalGridSize = size => {
   const cellSize = Math.floor(500 / size);
   const width = gridWidth(size);
   return cellSize - Math.floor(width / 542);
+};
+
+export const incrementCounter = (count, max = BENCHMARK_COUNTER_MAX) => {
+  if (count === 0) return 0;
+  if (count >= max) return 0;
+  return count + 1;
 };
 

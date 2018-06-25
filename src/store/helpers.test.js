@@ -1,4 +1,12 @@
-import {randomGrid, livingNeighbors, tick, gridWidth, optimalGridSize} from './helpers';
+import {
+  randomGrid,
+  livingNeighbors,
+  tick,
+  gridWidth,
+  optimalGridSize,
+  incrementCounter,
+  BENCHMARK_COUNTER_MAX
+} from './helpers';
 
 describe('randomGrid', () => {
   it('should return a grid of the correct size', () => {
@@ -97,5 +105,23 @@ describe('optimalGridSize', () => {
     expect(optimalGridSize(80)).toBe(5);
     expect(optimalGridSize(90)).toBe(5);
     expect(optimalGridSize(100)).toBe(4);
+  });
+});
+
+describe('incrementCounter', () => {
+  it('should increment counter by 1', () => {
+    expect(incrementCounter(1)).toBe(2);
+    expect(incrementCounter(34)).toBe(35);
+    expect(incrementCounter(77)).toBe(78);
+  });
+  it('should not increment counter if it is 0', () => {
+    expect(incrementCounter(0)).toBe(0);
+  });
+  it('should return 0 if it exceeds or equal to max', () => {
+    expect(incrementCounter(101, 100)).toBe(0);
+    expect(incrementCounter(999, 999)).toBe(0);
+  });
+  it('should use BENCHMARK_COUNTER_MAX if no max is specified', () => {
+    expect(incrementCounter(BENCHMARK_COUNTER_MAX, BENCHMARK_COUNTER_MAX)).toBe(0);
   });
 });
