@@ -1,4 +1,4 @@
-import {randomGrid, tick, optimalGridSize, incrementCounter} from './helpers';
+import {randomGrid, tick, optimalGridSize, incrementCounter, setLastBenchmarkElapsed} from './helpers';
 
 const DEFAULT_SIZE = 40;
 
@@ -16,7 +16,8 @@ export const initialState = {
   running: false,
   size: '12px',
   benchmarkCounter: 0,
-  benchmarkStartTime: 0
+  benchmarkStartTime: 0,
+  lastBenchmarkElapsed: 0
 };
 
 // Action Creators
@@ -33,6 +34,7 @@ export const startBenchmarkTest = () => ({ type: START_BENCHMARK_TEST });
 export default function (state = initialState, action) {
   const {rows, cols, cells, running} = state;
   let benchmarkCounter = 0;
+  let trials = state.benchmarkTrials;
 
   switch (action.type) {
     case START_BENCHMARK_TEST:
@@ -57,7 +59,8 @@ export default function (state = initialState, action) {
         ...state,
         cells: tick(cells, [rows, cols]),
         benchmarkCounter: benchmarkCounter,
-        running: !!benchmarkCounter
+        running: !!benchmarkCounter,
+        lastBenchmarkElapsed: setLastBenchmarkElapsed(state.running, state.benchmarkCounter, state.benchmarkStartTime)
       };
 
     case CLEAR_GRID:
