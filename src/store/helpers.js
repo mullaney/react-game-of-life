@@ -1,5 +1,3 @@
-import { start } from 'repl';
-
 const ALIVE = 1;
 const DEAD = 0;
 export const BENCHMARK_COUNTER_MAX = 1000;

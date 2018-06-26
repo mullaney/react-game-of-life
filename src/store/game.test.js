@@ -134,7 +134,21 @@ describe('Game store', () => {
         expect(newState.running).toBe(false);
         expect(newState.benchmarkCounter).toBe(0);
       });
-    });
+      it('should not stop running with these values', () => {
+        const state = {
+          benchmarkCounter: 0,
+          benchmarkStartTime: 0,
+          cols: 20,
+          cells: [],
+          lastBenchmarkElapsed: 0,
+          rows: 20,
+          running: true,
+          size: '25px',
+        };
+        const newState = reduce(state, oneTick());
+        expect(newState.running).toBe(true);
+      });
+  });
 
     describe('TOGGLE_PLAY', () => {
       it('should toggle running to true', () => {
@@ -224,12 +238,14 @@ describe('Game store', () => {
       it('should set set benchmark counter to 1', () => {
         const state = {
           other: 'property',
-          benchmarkCounter: 0
+          benchmarkCounter: 0,
+          running: false
         };
 
         let newState = reduce(state, startBenchmarkTest());
         expect(newState.other).toBe('property');
         expect(newState.benchmarkCounter).toBe(1);
+        expect(newState.running).toBe(true);
       });
 
       it('should set set benchmark start time to a timestamp', () => {
