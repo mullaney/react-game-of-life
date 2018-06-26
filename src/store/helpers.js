@@ -1,5 +1,6 @@
 const ALIVE = 1;
 const DEAD = 0;
+export const BENCHMARK_COUNTER_MAX = 1000;
 
 export const randomGrid = size => {
   const grid = new Array(size).fill(0).map(() => Math.floor(Math.random() * 1.6));
@@ -52,3 +53,26 @@ export const optimalGridSize = size => {
   return cellSize - Math.floor(width / 542);
 };
 
+export const incrementCounter = (count, max = BENCHMARK_COUNTER_MAX) => {
+  if (count === 0) return 0;
+  if (count >= max) return 0;
+  return count + 1;
+};
+
+export const setLastBenchmarkElapsed = (running, counter, startTime) => {
+  if (counter < BENCHMARK_COUNTER_MAX || !running || startTime === 0) {
+    return 0;
+  } else {
+    return new Date().getTime() - startTime;
+  }
+};
+
+// export const addTrial = (trials, counter, running, startTime, cellsLength) => {
+//   if (counter >= BENCHMARK_COUNTER_MAX && running) {
+//     trials.push({
+//       elapsedTime: new Date().getTime() - startTime,
+//       cellsLength
+//     });
+//   }
+//   return trials;
+// };

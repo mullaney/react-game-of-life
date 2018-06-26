@@ -4,45 +4,53 @@ import reduce, {
   oneTick,
   togglePlay,
   changeGridSize,
+  startBenchmarkTest,
   CLEAR_GRID,
   RANDOMIZE_GRID,
   ONE_TICK,
   TOGGLE_PLAY,
-  CHANGE_GRID_SIZE
+  CHANGE_GRID_SIZE,
+  START_BENCHMARK_TEST
 } from './game';
+import { BENCHMARK_COUNTER_MAX } from './helpers';
 
 describe('Game store', () => {
   describe('action creators', () => {
     describe('clearGrid', () => {
-      test('should create the correct action', () => {
+      it('should create the correct action', () => {
         expect(clearGrid()).toEqual({ type: CLEAR_GRID });
       });
     });
     describe('randomizeGrid', () => {
-      test('should create the correct action', () => {
+      it('should create the correct action', () => {
         expect(randomizeGrid()).toEqual({ type: RANDOMIZE_GRID });
       });
     });
     describe('oneTick', () => {
-      test('should create the correct action', () => {
+      it('should create the correct action', () => {
         expect(oneTick()).toEqual({ type: ONE_TICK });
       });
     });
     describe('togglePlay', () => {
-      test('should create the correct action', () => {
+      it('should create the correct action', () => {
         expect(togglePlay()).toEqual({ type: TOGGLE_PLAY });
       });
     });
     describe('changeGridSize', () => {
-      test('should change the grid size', () => {
+      it('should change the grid size', () => {
         expect(changeGridSize(80)).toEqual({ type: CHANGE_GRID_SIZE, size: 80 });
+      });
+    });
+    describe('startBenchmarkTest', () => {
+      it('should create the correct action', () => {
+        expect(startBenchmarkTest()).toEqual({ type: START_BENCHMARK_TEST });
       });
     });
   });
 
   describe('reducer', () => {
     describe('CLEAR_GRID should clear the grid', () => {
-      test('should clear the grid', () => {
+      it('should clear the grid', () => {
         const state = {
           cells: [0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1],
           other: 'property',
@@ -57,7 +65,7 @@ describe('Game store', () => {
     });
 
     describe('RANDOMIZE_GRID should randomize the grid', () => {
-      test('should clear the grid', () => {
+      it('should clear the grid', () => {
         const state = {
           cells: new Array(100),
           other: 'property',
@@ -69,21 +77,21 @@ describe('Game store', () => {
     });
 
     describe('ONE_TICK should transform the grid by one tick', () => {
-      test('should clear the grid', () => {
-        const blinker1 = [
-          0, 0, 0, 0, 0,
-          0, 0, 1, 0, 0,
-          0, 0, 1, 0, 0,
-          0, 0, 1, 0, 0,
-          0, 0, 0, 0, 0,
-        ];
-        const blinker2 = [
-          0, 0, 0, 0, 0,
-          0, 0, 0, 0, 0,
-          0, 1, 1, 1, 0,
-          0, 0, 0, 0, 0,
-          0, 0, 0, 0, 0,
-        ];
+      const blinker1 = [
+        0, 0, 0, 0, 0,
+        0, 0, 1, 0, 0,
+        0, 0, 1, 0, 0,
+        0, 0, 1, 0, 0,
+        0, 0, 0, 0, 0,
+      ];
+      const blinker2 = [
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 1, 1, 1, 0,
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+      ];
+      it('should transform the grid by one tic', () => {
         const state1 = {
           cells: blinker1,
           other: 'property',
@@ -96,15 +104,54 @@ describe('Game store', () => {
           rows: 5,
           cols: 5,
         };
-        expect(reduce(state1, oneTick())).toEqual(state2);
-        expect(reduce(state2, oneTick())).toEqual(state1);
-        expect(reduce(state1, oneTick())).toEqual(state2);
-        expect(reduce(state2, oneTick())).toEqual(state1);
+        const newState1 = reduce(state1, oneTick());
+        expect(newState1.cells).toEqual(state2.cells);
+        const newState2 = reduce(newState1, oneTick());
+        expect(newState2.cells).toEqual(state1.cells);
       });
-    });
+      it('if benchmark running, should increase the benchmark counter', () => {
+        const state = {
+          rows: 5,
+          cols: 5,
+          cells: blinker1,
+          benchmarkCounter: 1,
+          other: 'property'
+        };
+        const newState = reduce(state, oneTick());
+        expect(newState.benchmarkCounter).toBe(2);
+        expect(newState.other).toBe('property');
+      });
+      it('if benchmark counter exceeds 1000, stop running', () => {
+        const state = {
+          rows: 5,
+          cols: 5,
+          cells: blinker1,
+          benchmarkCounter: 1000,
+          running: true,
+          other: 'property'
+        };
+        const newState = reduce(state, oneTick());
+        expect(newState.running).toBe(false);
+        expect(newState.benchmarkCounter).toBe(0);
+      });
+      it('should not stop running with these values', () => {
+        const state = {
+          benchmarkCounter: 0,
+          benchmarkStartTime: 0,
+          cols: 20,
+          cells: [],
+          lastBenchmarkElapsed: 0,
+          rows: 20,
+          running: true,
+          size: '25px',
+        };
+        const newState = reduce(state, oneTick());
+        expect(newState.running).toBe(true);
+      });
+  });
 
     describe('TOGGLE_PLAY', () => {
-      test('should toggle running to true', () => {
+      it('should toggle running to true', () => {
         const state = {
           running: false,
           other: 'property'
@@ -114,7 +161,7 @@ describe('Game store', () => {
           other: 'property'
         });
       });
-      test('should toggle running to false', () => {
+      it('should toggle running to false', () => {
         const state = {
           running: true,
           other: 'property'
@@ -127,7 +174,7 @@ describe('Game store', () => {
     });
 
     describe('CHANGE_GRID_SIZE', () => {
-      test('should set the correct row, height and size, when changing size of grid', () => {
+      it('should set the correct row, height and size, when changing size of grid', () => {
         const state = {
           rows: 5,
           cols: 5,
@@ -173,7 +220,7 @@ describe('Game store', () => {
         expect(newState.rows).toBe(100);
         expect(newState.size).toBe('4px');
       });
-      test('should set running to false', () => {
+      it('should set running to false', () => {
         const state = {
           rows: 5,
           cols: 5,
@@ -184,6 +231,52 @@ describe('Game store', () => {
 
         let newState = reduce(state, changeGridSize(20));
         expect(newState.running).toBe(false);
+      });
+    });
+
+    describe('START_BENCHMARK_TEST', () => {
+      it('should set set benchmark counter to 1', () => {
+        const state = {
+          other: 'property',
+          benchmarkCounter: 0,
+          running: false
+        };
+
+        let newState = reduce(state, startBenchmarkTest());
+        expect(newState.other).toBe('property');
+        expect(newState.benchmarkCounter).toBe(1);
+        expect(newState.running).toBe(true);
+      });
+
+      it('should set set benchmark start time to a timestamp', () => {
+        const state = {
+          other: 'property',
+          benchmarkStartTime: 0
+        };
+        const now = new Date().getTime();
+
+        let newState = reduce(state, startBenchmarkTest());
+        expect(newState.other).toBe('property');
+        expect(newState.benchmarkStartTime).toBeGreaterThanOrEqual(now);
+        expect(newState.benchmarkStartTime).toBeLessThan(now + 5);
+      });
+    });
+
+    describe('end benchmark test', () => {
+      it('when running and counter exceeds max, benchmark trial added', () => {
+        const now = new Date().getTime() - 500;
+        const state = {
+          other: 'property',
+          benchmarkStartTime: now,
+          benchmarkCounter: BENCHMARK_COUNTER_MAX,
+          lastBenchmarkElapsed: 0,
+          running: true,
+          cells: []
+        };
+
+        let newState = reduce(state, oneTick());
+        expect(newState.other).toBe('property');
+        expect(newState.lastBenchmarkElapsed).toBeGreaterThanOrEqual(500);
       });
     });
   });

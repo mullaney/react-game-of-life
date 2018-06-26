@@ -1,4 +1,14 @@
-import {randomGrid, livingNeighbors, tick, gridWidth, optimalGridSize} from './helpers';
+import {
+  randomGrid,
+  livingNeighbors,
+  tick,
+  gridWidth,
+  optimalGridSize,
+  incrementCounter,
+  setLastBenchmarkElapsed,
+  // addTrial,
+  BENCHMARK_COUNTER_MAX
+} from './helpers';
 
 describe('randomGrid', () => {
   it('should return a grid of the correct size', () => {
@@ -99,3 +109,52 @@ describe('optimalGridSize', () => {
     expect(optimalGridSize(100)).toBe(4);
   });
 });
+
+describe('incrementCounter', () => {
+  it('should increment counter by 1', () => {
+    expect(incrementCounter(1)).toBe(2);
+    expect(incrementCounter(34)).toBe(35);
+    expect(incrementCounter(77)).toBe(78);
+  });
+  it('should not increment counter if it is 0', () => {
+    expect(incrementCounter(0)).toBe(0);
+  });
+  it('should return 0 if it exceeds or equal to max', () => {
+    expect(incrementCounter(101, 100)).toBe(0);
+    expect(incrementCounter(999, 999)).toBe(0);
+  });
+  it('should use BENCHMARK_COUNTER_MAX if no max is specified', () => {
+    expect(incrementCounter(BENCHMARK_COUNTER_MAX, BENCHMARK_COUNTER_MAX)).toBe(0);
+  });
+});
+
+describe('setLastBenchmarkElapsed', () => {
+  it('should return 0', () => {
+    const running = true;
+    const startTime = new Date().getTime() - 200;
+    const counter = BENCHMARK_COUNTER_MAX;
+    expect(setLastBenchmarkElapsed(false, counter, startTime)).toBe(0);
+    expect(setLastBenchmarkElapsed(running, 0, startTime)).toBe(0);
+    expect(setLastBenchmarkElapsed(running, counter, 0)).toBe(0);
+  });
+  it('should calculate lastBenchmarkElapsed', () => {
+    const running = true;
+    const startTime = new Date().getTime() - 200;
+    const counter = BENCHMARK_COUNTER_MAX;
+    expect(setLastBenchmarkElapsed(running, counter, startTime)).toBeGreaterThanOrEqual(200);
+  });
+});
+
+// xdescribe('addTrials', () => {
+//   it('should add a trial when the trial is over', () => {
+//     const startTime = new Date().getTime() - 500;
+//     const running = true;
+//     const counter = BENCHMARK_COUNTER_MAX;
+//     const trials = [];
+//     const cellsLength = 100 * 100;
+//     addTrial(trials, counter, running, startTime, cellsLength);
+//     expect(trials.length).toBe(1);
+//     expect(trials[0].elapsedTime).toBeGreaterThanOrEqual(500);
+//     expect(trials[0].cellsLength).toBe(cellsLength);
+//   });
+// });

@@ -1,4 +1,11 @@
-import {randomGrid, tick, optimalGridSize} from './helpers';
+import {
+  randomGrid,
+  tick,
+  optimalGridSize,
+  incrementCounter,
+  setLastBenchmarkElapsed,
+  // BENCHMARK_COUNTER_MAX
+} from './helpers';
 
 const DEFAULT_SIZE = 40;
 
@@ -7,13 +14,17 @@ export const RANDOMIZE_GRID = 'RANDOMIZE_GRID';
 export const ONE_TICK = 'ONE_TICK';
 export const TOGGLE_PLAY = 'TOGGLE_PLAY';
 export const CHANGE_GRID_SIZE = 'CHANGE_GRID_SIZE';
+export const START_BENCHMARK_TEST = 'START_BENCHMARK_TEST';
 
 export const initialState = {
   cells: new Array(DEFAULT_SIZE * DEFAULT_SIZE).fill(0),
   rows: DEFAULT_SIZE,
   cols: DEFAULT_SIZE,
   running: false,
-  size: '12px'
+  size: '12px',
+  benchmarkCounter: 0,
+  benchmarkStartTime: 0,
+  lastBenchmarkElapsed: 0
 };
 
 // Action Creators
@@ -23,13 +34,24 @@ export const randomizeGrid = () => ({ type: RANDOMIZE_GRID });
 export const oneTick = () => ({ type: ONE_TICK });
 export const togglePlay = () => ({ type: TOGGLE_PLAY });
 export const changeGridSize = size => ({ type: CHANGE_GRID_SIZE, size });
+export const startBenchmarkTest = () => ({ type: START_BENCHMARK_TEST });
 
 // Reducer
 
 export default function (state = initialState, action) {
   const {rows, cols, cells, running} = state;
+  let benchmarkCounter = 0;
+  let shouldBeRunning = false;
 
   switch (action.type) {
+    case START_BENCHMARK_TEST:
+      return {
+        ...state,
+        benchmarkCounter: 1,
+        benchmarkStartTime: new Date().getTime(),
+        running: true
+      };
+
     case CHANGE_GRID_SIZE:
       return {
         ...state,
@@ -44,7 +66,15 @@ export default function (state = initialState, action) {
       return {...state, running: !running };
 
     case ONE_TICK:
-      return {...state, cells: tick(cells, [rows, cols])};
+      benchmarkCounter = incrementCounter(state.benchmarkCounter);
+      shouldBeRunning = (running && state.benchmarkStartTime === 0) || benchmarkCounter > 1;
+      return {
+        ...state,
+        cells: tick(cells, [rows, cols]),
+        benchmarkCounter: benchmarkCounter,
+        running: shouldBeRunning,
+        lastBenchmarkElapsed: setLastBenchmarkElapsed(state.running, state.benchmarkCounter, state.benchmarkStartTime)
+      };
 
     case CLEAR_GRID:
       return {...state, cells: cells.fill(0), running: false };
