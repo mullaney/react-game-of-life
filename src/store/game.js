@@ -4,7 +4,6 @@ import {
   optimalGridSize,
   incrementCounter,
   setLastBenchmarkElapsed,
-  // BENCHMARK_COUNTER_MAX
 } from './helpers';
 
 const DEFAULT_SIZE = 40;

@@ -73,14 +73,7 @@ export class App extends Component {
     );
   }
 }
-//40x40
-//179891
-//146518
-//129423
 
-//20x20
-//36630
-//36413
 const mapState = (state) => {
   return {
     rows: state.game.rows,

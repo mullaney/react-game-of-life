@@ -8,19 +8,19 @@ export const randomGrid = size => {
 };
 
 export const livingNeighbors = (cells, shape, row, col) => {
+  const firstRow  = (row === 0) ? shape[0] - 1 : row - 1;
+  const lastRow   = (row === shape[0] - 1) ? 0 : row + 1;
+  const firstCol  = (col === 0) ? shape[0] - 1 : col - 1;
+  const lastCol   = (col === shape[0] - 1) ? 0 : col + 1;
 
-  let neighbors = 0;
-  for (let x = row - 1; x <= row + 1; x++) {
-    for (let y = col - 1; y <= col + 1; y++) {
-      if (x === row && y === col) continue;
-
-      let thisRow = (x < 0) ? x + shape[0] : x % shape[0];
-      let thisCol = (y < 0) ? y + shape[0] : y % shape[1];
-
-      if (cells[thisRow * shape[1] + thisCol] === 1) neighbors++;
-    }
-  }
-  return neighbors;
+  return cells[firstRow * shape[1] + firstCol] +
+         cells[firstRow * shape[1] + col] +
+         cells[firstRow * shape[1] + lastCol] +
+         cells[row * shape[1] + firstCol] +
+         cells[row * shape[1] + lastCol] +
+         cells[lastRow * shape[1] + firstCol] +
+         cells[lastRow * shape[1] + col] +
+         cells[lastRow * shape[1] + lastCol];
 };
 
 export const tick = (cells, shape) => {
@@ -33,12 +33,12 @@ export const tick = (cells, shape) => {
     );
     const isAlive = !!cell;
 
-    if (isAlive && (neighbors < 2 || neighbors > 3)) {
+    if (!isAlive && neighbors !== 3) {
       return DEAD;
-    } else if (!isAlive && neighbors === 3) {
+    } else if (isAlive && (neighbors >= 2 && neighbors <= 3)) {
       return ALIVE;
     } else {
-      return isAlive ? ALIVE : DEAD;
+      return !isAlive ? ALIVE : DEAD;
     }
   });
 
@@ -66,13 +66,3 @@ export const setLastBenchmarkElapsed = (running, counter, startTime) => {
     return new Date().getTime() - startTime;
   }
 };
-
-// export const addTrial = (trials, counter, running, startTime, cellsLength) => {
-//   if (counter >= BENCHMARK_COUNTER_MAX && running) {
-//     trials.push({
-//       elapsedTime: new Date().getTime() - startTime,
-//       cellsLength
-//     });
-//   }
-//   return trials;
-// };
