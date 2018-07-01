@@ -4,6 +4,7 @@ import {
   optimalGridSize,
   incrementCounter,
   setLastBenchmarkElapsed,
+  shouldBeRunning,
 } from './helpers';
 
 const DEFAULT_SIZE = 40;
@@ -40,7 +41,6 @@ export const startBenchmarkTest = () => ({ type: START_BENCHMARK_TEST });
 export default function (state = initialState, action) {
   const {rows, cols, cells, running} = state;
   let benchmarkCounter = 0;
-  let shouldBeRunning = false;
 
   switch (action.type) {
     case START_BENCHMARK_TEST:
@@ -66,12 +66,11 @@ export default function (state = initialState, action) {
 
     case ONE_TICK:
       benchmarkCounter = incrementCounter(state.benchmarkCounter);
-      shouldBeRunning = (running && state.benchmarkStartTime === 0) || benchmarkCounter > 1;
       return {
         ...state,
         cells: tick(cells, [rows, cols]),
         benchmarkCounter: benchmarkCounter,
-        running: shouldBeRunning,
+        running: shouldBeRunning(benchmarkCounter, running, state.benchmarkStartTime),
         lastBenchmarkElapsed: setLastBenchmarkElapsed(state.running, state.benchmarkCounter, state.benchmarkStartTime)
       };
 

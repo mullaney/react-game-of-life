@@ -66,3 +66,7 @@ export const setLastBenchmarkElapsed = (running, counter, startTime) => {
     return new Date().getTime() - startTime;
   }
 };
+
+export const shouldBeRunning = (count, running, startTime) => {
+  return count > 1 || (running && startTime === 0);
+};
