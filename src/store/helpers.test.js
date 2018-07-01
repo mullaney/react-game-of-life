@@ -6,7 +6,7 @@ import {
   optimalGridSize,
   incrementCounter,
   setLastBenchmarkElapsed,
-  // addTrial,
+  shouldBeRunning,
   BENCHMARK_COUNTER_MAX
 } from './helpers';
 
@@ -145,16 +145,16 @@ describe('setLastBenchmarkElapsed', () => {
   });
 });
 
-// xdescribe('addTrials', () => {
-//   it('should add a trial when the trial is over', () => {
-//     const startTime = new Date().getTime() - 500;
-//     const running = true;
-//     const counter = BENCHMARK_COUNTER_MAX;
-//     const trials = [];
-//     const cellsLength = 100 * 100;
-//     addTrial(trials, counter, running, startTime, cellsLength);
-//     expect(trials.length).toBe(1);
-//     expect(trials[0].elapsedTime).toBeGreaterThanOrEqual(500);
-//     expect(trials[0].cellsLength).toBe(cellsLength);
-//   });
-// });
+describe('shouldBeRunning', () => {
+  it('should return true if benchmarkCounter is greater than 1', () => {
+    expect(shouldBeRunning(2)).toBe(true);
+  });
+  it('should return true if benchmarkStartTime is 0 and running is true', () => {
+    expect(shouldBeRunning(null, true, 0)).toBe(true);
+  });
+  it('should return false if benchmarkStartTime is 0 and running is false', () => {
+    expect(shouldBeRunning(null, false, 0)).toBe(false);
+  });
+});
+
+      // shouldBeRunning = (running && state.benchmarkStartTime === 0) || benchmarkCounter > 1;
