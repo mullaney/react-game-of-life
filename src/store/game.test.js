@@ -5,12 +5,14 @@ import reduce, {
   togglePlay,
   changeGridSize,
   startBenchmarkTest,
+  toggleCell,
   CLEAR_GRID,
   RANDOMIZE_GRID,
   ONE_TICK,
   TOGGLE_PLAY,
   CHANGE_GRID_SIZE,
-  START_BENCHMARK_TEST
+  START_BENCHMARK_TEST,
+  TOGGLE_CELL
 } from './game';
 import { BENCHMARK_COUNTER_MAX } from './helpers';
 
@@ -46,9 +48,33 @@ describe('Game store', () => {
         expect(startBenchmarkTest()).toEqual({ type: START_BENCHMARK_TEST });
       });
     });
+    describe('toggleCell', () => {
+      it('should create the correct action', () => {
+        expect(toggleCell(1)).toEqual({ type: TOGGLE_CELL, cell: 1 });
+      });
+    });
   });
 
   describe('reducer', () => {
+    describe('toggleCell', () => {
+      it('should make a dead cell alive', () => {
+        const state = {
+          cells: [0, 0, 0, 1],
+          other: 'property'
+        };
+        const newState = reduce(state, toggleCell(0));
+        expect(newState.cells).toEqual([ 1, 0, 0, 1] );
+      });
+      it('should make an alive cell dead', () => {
+        const state = {
+          cells: [1, 0, 0, 1],
+          other: 'property'
+        };
+        const newState = reduce(state, toggleCell(0));
+        expect(newState.cells).toEqual([ 0, 0, 0, 1] );
+      });
+    });
+
     describe('CLEAR_GRID should clear the grid', () => {
       it('should clear the grid', () => {
         const state = {

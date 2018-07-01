@@ -7,6 +7,7 @@ import {
   incrementCounter,
   setLastBenchmarkElapsed,
   shouldBeRunning,
+  toggleOne,
   BENCHMARK_COUNTER_MAX
 } from './helpers';
 
@@ -154,6 +155,14 @@ describe('shouldBeRunning', () => {
   });
   it('should return false if benchmarkStartTime is 0 and running is false', () => {
     expect(shouldBeRunning(null, false, 0)).toBe(false);
+  });
+});
+
+describe('toggleOne', () => {
+  it('should toggle one cell from 0 to 1 or 1 to 0', () => {
+    const cells = [0, 1, 0, 1];
+    const newCells = toggleOne(cells, 2);
+    expect(newCells[2]).toBe(1);
   });
 });
 

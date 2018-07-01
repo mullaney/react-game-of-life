@@ -70,3 +70,8 @@ export const setLastBenchmarkElapsed = (running, counter, startTime) => {
 export const shouldBeRunning = (count, running, startTime) => {
   return count > 1 || (running && startTime === 0);
 };
+
+export const toggleOne = (cells, index) => {
+  cells[index] = cells[index] === ALIVE ? DEAD : ALIVE;
+  return cells.slice();
+};
