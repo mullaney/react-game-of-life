@@ -14,6 +14,7 @@ import { clearGrid,
   oneTick,
   togglePlay,
   changeGridSize,
+  toggleCell,
   startBenchmarkTest} from './store';
 
 export class App extends Component {
@@ -42,7 +43,8 @@ export class App extends Component {
       handleTick,
       handlePlayStop,
       handleChange,
-      handleBenchmarkStart
+      handleBenchmarkStart,
+      handleToggle
     } = this.props;
 
     let counter = 0;
@@ -62,9 +64,9 @@ export class App extends Component {
             <InputRange onChange={handleChange} min="20" max="100" step="10" value={rows} />
             {!running && <Button onClick={handleBenchmarkStart}>✓</Button>}
           </Row>
-          <Grid cols={cols} rows={rows} size={size}>
-            {cells && cells.map(cell => {
-              return <Cell alive={!!cell} key={counter++} />;
+          <Grid cols={cols} rows={rows} size={size} onClick={handleToggle}>
+            {cells && cells.map((cell, index) => {
+              return <Cell alive={!!cell} key={counter++} id={`cell_${index}`} />;
             })}
           </Grid>
           <Text>{lastBenchmarkElapsed ? 'Last trial: ' + lastBenchmarkElapsed + ' ms' : ''}</Text>
@@ -104,6 +106,12 @@ const mapDispatch = (dispatch) => {
     },
     handleBenchmarkStart() {
       dispatch(startBenchmarkTest());
+    },
+    handleToggle(event) {
+      const id = event.target.id.slice(5);
+      if (id !== '') {
+        dispatch(toggleCell(id));
+      }
     }
   };
 };

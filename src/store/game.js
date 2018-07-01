@@ -5,6 +5,7 @@ import {
   incrementCounter,
   setLastBenchmarkElapsed,
   shouldBeRunning,
+  toggleOne,
 } from './helpers';
 
 const DEFAULT_SIZE = 40;
@@ -15,6 +16,7 @@ export const ONE_TICK = 'ONE_TICK';
 export const TOGGLE_PLAY = 'TOGGLE_PLAY';
 export const CHANGE_GRID_SIZE = 'CHANGE_GRID_SIZE';
 export const START_BENCHMARK_TEST = 'START_BENCHMARK_TEST';
+export const TOGGLE_CELL = 'TOGGLE_CELL';
 
 export const initialState = {
   cells: new Array(DEFAULT_SIZE * DEFAULT_SIZE).fill(0),
@@ -35,6 +37,7 @@ export const oneTick = () => ({ type: ONE_TICK });
 export const togglePlay = () => ({ type: TOGGLE_PLAY });
 export const changeGridSize = size => ({ type: CHANGE_GRID_SIZE, size });
 export const startBenchmarkTest = () => ({ type: START_BENCHMARK_TEST });
+export const toggleCell = cell => ({ type: TOGGLE_CELL, cell });
 
 // Reducer
 
@@ -63,6 +66,9 @@ export default function (state = initialState, action) {
 
     case TOGGLE_PLAY:
       return {...state, running: !running };
+
+    case TOGGLE_CELL:
+      return {...state, cells: toggleOne(state.cells, action.cell)};
 
     case ONE_TICK:
       benchmarkCounter = incrementCounter(state.benchmarkCounter);
