@@ -81,7 +81,7 @@ export default function (state = initialState, action) {
       };
 
     case CLEAR_GRID:
-      return {...state, cells: new Array(state.rows * state.cols).fill(0)};
+      return {...state, cells: new Array(state.cells.length).fill(0), running: false};
 
     case RANDOMIZE_GRID:
       return {...state, cells: randomGrid(rows * cols)};
